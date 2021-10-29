@@ -1,0 +1,45 @@
+import turtle
+import random
+import math
+import os
+
+
+screen = turtle.Screen()
+screen.bgpic('bg.gif')
+
+trajectories = [lambda x: math.sin(x)*200,
+                lambda x: 0.005*x**2,
+                lambda x: 0.5*x,
+                lambda x: 0.5*abs(x)]
+
+class Crewmate(turtle.Turtle):
+  def __init__(self, image):
+    super().__init__()
+    screen.addshape(image)
+    self.shape(image)
+    self.penup()
+    self.return_to_left()
+    self.onclick(self.clicked)
+  
+  def return_to_left(self):
+    self.trajectory = random.choice(trajectories)
+    self.speed(0)
+    self.hideturtle()
+    yval = random.randint(-200, 200)
+    self.goto(-266, yval)
+    self.showturtle()
+    self.speed(6)
+  
+  def clicked(self, *args):
+    self.return_to_left()
+
+crewmates = []
+for filename in os.listdir():
+    if not filename.startswith("bg") and filename.endswith(".gif"):
+        crewmates.append(Crewmate(filename))
+
+def game_loop():
+  pass
+
+turtle.ontimer(game_loop, t=100)
+screen.mainloop()
